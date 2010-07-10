@@ -1,5 +1,25 @@
-experimental ooc repl.
+experimental ooc repl
+=====================
 
-necessitates the latest rock: http://github.com/nddrylliog/rock and ooc-readline so far.
+Deps
+----
+
+http://github.com/nddrylliog/rock
+http://github.com/nddrylliog/ooc-readline
+
+Building it
+-----------
+
+DON'T FORGET TO export your OOC_DIST before you run 'make', otherwise it won't find NagaQueen.c
+
+Running it
+----------
+
+Type any ooc code at the ooci prompt. Type enter. Enjoy.
+
+Commands: #clear = clear the historic. #exit = exit the ooc repl
+
+Disclaimer
+----------
 
 will eat your laundry, subverse your dog, steal your candies and teach klingon to your children.
