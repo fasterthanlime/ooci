@@ -1,7 +1,8 @@
 /* Let me present you: the ooc repl for poor people with much time - torfppwmt (tm) */
 
-use readline
+use readline, rock
 import readline
+import rock/frontend/CommandLine
 
 import io/[File, FileReader,FileWriter]
 import os/Process
@@ -12,7 +13,9 @@ checkBunch: func (bunch: String) -> Bool {
     (bunch count('(') == bunch count(')')) && (bunch count('{') == bunch count('}'))
 }
 
-REPL new() run()
+main: func (args: ArrayList<String>) {
+    REPL new() run()
+}
 
 REPL: class {
     file: File
@@ -29,25 +32,21 @@ REPL: class {
 
     append: func (text: String) {
         writer := FileWriter new(file, true)
-        writer write(text) .write('\n')
+        writer write(text)
         writer close()
     }
 
     compile: func {
-        args := ["rock", "-v", "-tcc", "-r", "repl.ooc"] as ArrayList<String>
-        proc := Process new(args)
-        proc setCwd("/tmp")
-        //proc execute()
-        proc getOutput() println()
+        CommandLine new(["rock", "-tcc", "-r", "-sourcepath=/tmp", "-o=/tmp/repl", "repl.ooc"] as ArrayList<String>)
     }
 
     readBunch: func -> String {
         buffer := Buffer new()
         first := true
         while(!checkBunch(buffer toString()) || first) {
-            line := Readline readLine(first ? ">> " : "   ")
+            line := Readline readLine(first ? "ooc > " : "      ")
             if(!line isEmpty()) Readline addHistory(line)
-            buffer append(line)
+            buffer append(line). append('\n')
             free(line)
 
             first = false
@@ -60,10 +59,11 @@ REPL: class {
             bunch := readBunch()
             if(bunch startsWith('#')) {
                 cmd := bunch substring(1)
-                if(cmd == "clear") {
-                    clear()
-                } else {
-                    "Unknown command: %s" format(cmd) println()
+
+                match cmd {
+                    case "clear" => clear()
+                    case "exit"  => exit(0)
+                    case         => "Unknown command: %s" format(cmd) println()
                 }
             } else {
                 append(bunch)
