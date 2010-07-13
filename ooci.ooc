@@ -37,7 +37,8 @@ REPL: class {
     }
 
     compile: func {
-        CommandLine new(["rock", "-tcc", "-r", "-sourcepath=/tmp", "-o=/tmp/repl", "repl.ooc"] as ArrayList<String>)
+        CommandLine new(["rock", "-tcc", "-sourcepath=/tmp", "-q", "-o=/tmp/repl", "repl.ooc"] as ArrayList<String>)
+        Process new(["/tmp/repl"] as ArrayList<String>) execute()
     }
 
     readBunch: func -> String {
